@@ -1,6 +1,7 @@
 require 'redmine'
 
 require 'custom_email_issue_observer_patch'
+require 'custom_email_journal_observer_patch'
 
 require 'custom_email_mailer_patch'
 
