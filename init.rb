@@ -1,5 +1,7 @@
 require 'redmine'
 
+require 'custom_email_issue_observer_patch'
+
 Redmine::Plugin.register :redmine_custom_email do
   name 'Custom Email plugin'
   author 'Eric Davis'
