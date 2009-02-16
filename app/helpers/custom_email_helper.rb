@@ -13,10 +13,14 @@ module CustomEmailHelper
   def deliverable_labor_budget(user, issue, html=true)
     return '' unless Object.const_defined?("Deliverable") && issue.deliverable && user && user.allowed_to?(:manage_budget, issue.project)
 
+    text = "#{ l(:label_labor_budget_spent) }: " # Label
+    text += "(#{ number_to_currency(issue.deliverable.spent) })" # Used
+    text += "(#{ number_to_currency(issue.deliverable.labor_budget) })" # Total 
+
     if html
-      return "<li>#{ l(:label_labor_budget_spent) }: #{ number_to_currency(issue.deliverable.labor_budget) }</li>"
+      return content_tag(:li, text)
     else
-      return "#{ l(:label_labor_budget_spent) }: #{ number_to_currency(issue.deliverable.labor_budget) }"
+      return text
 
     end
   end

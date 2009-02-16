@@ -35,7 +35,10 @@ describe 'a custom email', :shared => true do
 
   describe 'with a Deliverable' do
     before(:each) do
-      @issue.deliverable = mock_model(Deliverable, :subject => "Take over the world", :labor_budget => 200.0)
+      @issue.deliverable = mock_model(HourlyDeliverable,
+                                      :subject => "Take over the world",
+                                      :labor_budget => 200.0,
+                                      :spent => 100.0)
       @author.stub!(:allowed_to?).with(:view_time_entries, @project).and_return(false)
       User.stub!(:find_by_mail).with(@author.mail).and_return(@author)
     end
@@ -49,6 +52,11 @@ describe 'a custom email', :shared => true do
         mail = create_mail
         mail.body.should match(/\$200.0/i)
       end
+
+      it 'should show the labor budget spent' do
+        mail = create_mail
+        mail.body.should match(/\$100.0/i)
+      end
     end
 
     describe 'without the :manage_budget permission' do
@@ -60,6 +68,12 @@ describe 'a custom email', :shared => true do
         mail = create_mail
         mail.body.should_not match(/200.0/i)
       end
+
+      it 'should not show the labor budget spent' do
+        mail = create_mail
+        mail.body.should_not match(/100.0/i)
+      end
+
     end
   end
 end
