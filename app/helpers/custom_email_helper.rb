@@ -14,8 +14,8 @@ module CustomEmailHelper
     return '' unless Object.const_defined?("Deliverable") && issue.deliverable && user && user.allowed_to?(:manage_budget, issue.project)
 
     text = "#{ l(:label_labor_budget_spent) }: " # Label
-    text += "(#{ number_to_currency(issue.deliverable.spent) })" # Used
-    text += "(#{ number_to_currency(issue.deliverable.labor_budget) })" # Total 
+    text += "#{issue.deliverable.hours_used} #{ l(:field_hours) } (#{ number_to_currency(issue.deliverable.spent) }) " # Used
+    text += "#{issue.deliverable.total_hours} #{ l(:field_hours) } (#{ number_to_currency(issue.deliverable.labor_budget) }) " # Total 
 
     if html
       return content_tag(:li, text)
