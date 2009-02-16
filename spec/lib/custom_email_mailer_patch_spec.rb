@@ -22,7 +22,7 @@ describe Mailer, "#issue_add" do
 
   it 'should show the total time spent on the issue if the user has the :view_time_entries permission' do
     @issue.estimated_hours = 20
-    @issue.should_receive(:spent_time).at_least(:twice).and_return(10)
+    @issue.should_receive(:spent_hours).at_least(:twice).and_return(10)
     @author.should_receive(:allowed_to?).at_least(:twice).with(:view_time_entries, @project).and_return(true)
     User.should_receive(:find_by_mail).with(@author.mail).and_return(@author)
 
@@ -71,7 +71,7 @@ describe Mailer, "#issue_edit" do
 
   it 'should show the total time spent on the issue if the user has the :view_time_entries permission' do
     @issue.estimated_hours = 20
-    @issue.should_receive(:spent_time).at_least(:twice).and_return(10)
+    @issue.should_receive(:spent_hours).at_least(:twice).and_return(10)
     @author.should_receive(:allowed_to?).at_least(:twice).with(:view_time_entries, @project).and_return(true)
     User.should_receive(:find_by_mail).with(@author.mail).and_return(@author)
 
