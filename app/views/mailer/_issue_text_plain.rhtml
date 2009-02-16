@@ -7,9 +7,7 @@
 <%=l(:field_assigned_to)%>: <%= issue.assigned_to %>
 <%=l(:field_category)%>: <%= issue.category %>
 <%=l(:field_fixed_version)%>: <%= issue.fixed_version %>
-<% if Object.const_defined?("Deliverable") && @issue.deliverable %>
-<%=l(:field_deliverable_subject)%>: <%= @issue.deliverable.subject %>
-<% end %>
+<%= deliverable_subject(@issue.deliverable) %>
 <% if Object.const_defined?("Deliverable") && @issue.deliverable && @user && @user.allowed_to?(:manage_budget, @issue.project) %>
 <%=l(:label_labor_budget_spent)%>: <%= number_to_currency(@issue.deliverable.labor_budget) %>
 <% end %>
