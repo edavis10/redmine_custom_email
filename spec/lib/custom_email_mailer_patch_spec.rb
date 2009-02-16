@@ -42,4 +42,10 @@ describe Mailer, "#issue_edit" do
     mail = Mailer.create_issue_edit(@journal, @author.email)
     mail.bcc.size.should eql(1)
   end
+
+  it 'should display the Deliverable subject if the Budget plugin is present' do
+    @issue.deliverable = mock_model(Deliverable, :subject => "Take over the world")
+    mail = Mailer.create_issue_edit(@journal, @author.email)
+    mail.body.should match(/take over the world/i)
+  end
 end
