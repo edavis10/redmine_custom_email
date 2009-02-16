@@ -10,6 +10,11 @@
 <% if Object.const_defined?("Deliverable") && @issue.deliverable %>
 <li><%=l(:field_deliverable_subject)%>: <%= @issue.deliverable.subject %></li>
 <% end %>
+<% if Object.const_defined?("Deliverable") && @issue.deliverable && @user && @user.allowed_to?(:manage_budget, @issue.project) %>
+
+<li><%=l(:label_labor_budget_spent)%>: <%= number_to_currency(@issue.deliverable.labor_budget) %></li>
+
+<% end %>
 <% if @user && @user.allowed_to?(:view_time_entries, @issue.project) %>
 <li><%=l(:label_spent_hours)%>: <%= @issue.spent_hours %> of <%= @issue.estimated_hours || 0 %> <%= l(:field_hours) %></li>
 <% end %>
