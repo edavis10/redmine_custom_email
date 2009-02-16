@@ -16,9 +16,7 @@ Added By: <%= @issue.author %>
 <% if Object.const_defined?("Deliverable") && @issue.deliverable && @user && @user.allowed_to?(:manage_budget, @issue.project) %>
 <%=l(:label_labor_budget_spent)%>: <%= number_to_currency(@issue.deliverable.labor_budget) %>
 <% end %>
-<% if @user && @user.allowed_to?(:view_time_entries, @issue.project) %>
-<%=l(:label_spent_hours)%>: <%= @issue.spent_hours %> of <%= @issue.estimated_hours || 0 %> <%= l(:field_hours) %>
-<% end %>
+<%= issue_spent_hours(@user, @issue, false) %>
 <%- @issue.custom_values.each do |c| -%>
 <%= c.custom_field.name -%>: <%= show_value(c) -%>
 <%- end -%>
