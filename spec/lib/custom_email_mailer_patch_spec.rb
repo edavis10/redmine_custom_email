@@ -39,6 +39,27 @@ describe Mailer, "#issue_add" do
     mail.body.should_not match(/hours/i)
   end
 
+  it 'should show the labor budget spent if a user has the :manage_budget permission' do
+    @issue.deliverable = mock_model(Deliverable, :subject => "Take over the world", :labor_budget => 200.0)
+    @author.stub!(:allowed_to?).with(:view_time_entries, @project).and_return(false)
+
+    @author.should_receive(:allowed_to?).with(:manage_budget, @project).at_least(:twice).and_return(true)
+    User.should_receive(:find_by_mail).with(@author.mail).and_return(@author)
+
+    mail = Mailer.create_issue_add(@issue, @author.mail)
+    mail.body.should match(/\$200.0/i)
+  end
+
+  it 'should not show the labor budget spent if a user doesnt have the :manage_budget permission' do
+    @issue.deliverable = mock_model(Deliverable, :subject => "Take over the world", :labor_budget => 200.0)
+    @author.stub!(:allowed_to?).with(:view_time_entries, @project).and_return(false)
+
+    @author.stub!(:allowed_to?).with(:manage_budget, @project).and_return(false)
+    User.should_receive(:find_by_mail).with(@author.mail).and_return(@author)
+
+    mail = Mailer.create_issue_add(@issue, @author.mail)
+    mail.body.should_not match(/200.0/i)
+  end
 end
 
 describe Mailer, "#issue_edit" do
