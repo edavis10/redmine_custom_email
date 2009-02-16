@@ -50,6 +50,7 @@ module CustomEmailMailerPatch
 
         body(:issue => issue,
              :journal => journal,
+             :user => User.find_by_mail(recipient),
              :issue_url => url_for(:controller => 'issues', :action => 'show', :id => issue))
       end
     end
