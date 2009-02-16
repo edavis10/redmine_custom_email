@@ -1,0 +1,10 @@
+<%= @journal.notes if @journal.notes? %>
+
+Updated by: <%= @journal.user %>
+
+<% for detail in @journal.details -%>
+<%= show_detail(detail, true) %>
+<% end -%>
+
+----------------------------------------
+<%= render :partial => "issue_text_plain", :locals => { :issue => @issue, :issue_url => @issue_url } %>
