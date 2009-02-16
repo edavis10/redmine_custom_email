@@ -8,6 +8,8 @@ module CustomEmailMailerPatch
       # Move old mailer methods to a new name
       alias_method_chain :issue_add, :recipient
       alias_method_chain :issue_edit, :recipient
+
+      helper :custom_email
     end
   end
   
