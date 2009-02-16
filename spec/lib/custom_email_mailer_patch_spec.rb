@@ -39,7 +39,7 @@ describe Mailer, "#issue_add" do
     mail.body.should_not match(/hours/i)
   end
 
-  it 'should show the labor budget spent if a user has the :manage_budget permission' do
+  it 'should show the labor budget if a user has the :manage_budget permission' do
     @issue.deliverable = mock_model(Deliverable, :subject => "Take over the world", :labor_budget => 200.0)
     @author.stub!(:allowed_to?).with(:view_time_entries, @project).and_return(false)
 
@@ -50,7 +50,7 @@ describe Mailer, "#issue_add" do
     mail.body.should match(/\$200.0/i)
   end
 
-  it 'should not show the labor budget spent if a user doesnt have the :manage_budget permission' do
+  it 'should not show the labor budget if a user doesnt have the :manage_budget permission' do
     @issue.deliverable = mock_model(Deliverable, :subject => "Take over the world", :labor_budget => 200.0)
     @author.stub!(:allowed_to?).with(:view_time_entries, @project).and_return(false)
 
@@ -109,7 +109,7 @@ describe Mailer, "#issue_edit" do
     mail.body.should_not match(/hours/i)
   end
 
-  it 'should show the labor budget spent if a user has the :manage_budget permission' do
+  it 'should show the labor budget if a user has the :manage_budget permission' do
     @issue.deliverable = mock_model(Deliverable, :subject => "Take over the world", :labor_budget => 200.0)
     @author.stub!(:allowed_to?).with(:view_time_entries, @project).and_return(false)
 
@@ -120,7 +120,7 @@ describe Mailer, "#issue_edit" do
     mail.body.should match(/\$200.0/i)
   end
 
-  it 'should not show the labor budget spent if a user doesnt have the :manage_budget permission' do
+  it 'should not show the labor budget if a user doesnt have the :manage_budget permission' do
     @issue.deliverable = mock_model(Deliverable, :subject => "Take over the world", :labor_budget => 200.0)
     @author.stub!(:allowed_to?).with(:view_time_entries, @project).and_return(false)
 
