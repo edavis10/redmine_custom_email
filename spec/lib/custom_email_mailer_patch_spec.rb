@@ -13,7 +13,7 @@ describe 'with a Deliverable', :shared => true do
     end
 
     it 'should show the labor budget' do
-      mail = Mailer.create_issue_add(@issue, @author.mail)
+      mail = create_mail
       mail.body.should match(/\$200.0/i)
     end
   end
@@ -24,7 +24,7 @@ describe 'with a Deliverable', :shared => true do
     end
 
     it 'should not show the labor budget' do
-      mail = Mailer.create_issue_add(@issue, @author.mail)
+      mail = create_mail
       mail.body.should_not match(/200.0/i)
     end
   end
@@ -32,6 +32,10 @@ end
 
 
 describe Mailer, "#issue_add" do
+  def create_mail
+    return Mailer.create_issue_add(@issue, @author.mail)
+  end
+
   before(:each) do
     @author = mock_model(User, :name => 'Mock', :login => 'mock', :mail => 'test@example.com')
     @project = mock_model(Project, :name => 'test', :identifier => 'test')
@@ -76,9 +80,16 @@ describe Mailer, "#issue_add" do
 end
 
 describe Mailer, "#issue_edit" do
+  def create_mail
+    return Mailer.create_issue_edit(@journal, @author.mail)
+  end
+
+
   before(:each) do
     @author = mock_model(User, :name => 'Mock', :login => 'mock', :mail => 'test@example.com', :pref => { })
     @project = mock_model(Project, :name => 'test', :identifier => 'test')
+    @author.stub!(:allowed_to?).with(:view_time_entries, @project).and_return(false)
+    @author.stub!(:allowed_to?).with(:manage_budget, @project).and_return(false)
     @tracker = mock_model(Tracker, :name => "Bug")
     @issue = Issue.new(:author => @author, :project => @project, :tracker => @tracker)
     @journal_details = mock_model(JournalDetail, :each => [])
@@ -122,25 +133,5 @@ describe Mailer, "#issue_edit" do
     mail.body.should_not match(/hours/i)
   end
 
-  it 'should show the labor budget if a user has the :manage_budget permission' do
-    @issue.deliverable = mock_model(Deliverable, :subject => "Take over the world", :labor_budget => 200.0)
-    @author.stub!(:allowed_to?).with(:view_time_entries, @project).and_return(false)
-
-    @author.should_receive(:allowed_to?).with(:manage_budget, @project).at_least(:twice).and_return(true)
-    User.should_receive(:find_by_mail).with(@author.mail).and_return(@author)
-
-    mail = Mailer.create_issue_edit(@journal, @author.mail)
-    mail.body.should match(/\$200.0/i)
-  end
-
-  it 'should not show the labor budget if a user doesnt have the :manage_budget permission' do
-    @issue.deliverable = mock_model(Deliverable, :subject => "Take over the world", :labor_budget => 200.0)
-    @author.stub!(:allowed_to?).with(:view_time_entries, @project).and_return(false)
-
-    @author.stub!(:allowed_to?).with(:manage_budget, @project).and_return(false)
-    User.should_receive(:find_by_mail).with(@author.mail).and_return(@author)
-
-    mail = Mailer.create_issue_edit(@journal, @author.mail)
-    mail.body.should_not match(/200.0/i)
-  end
+  it_should_behave_like 'with a Deliverable'
 end
