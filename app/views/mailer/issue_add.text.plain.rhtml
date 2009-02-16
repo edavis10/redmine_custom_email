@@ -15,6 +15,9 @@ Added By: <%= @issue.author %>
 <% if Object.const_defined?("Deliverable") && @issue.deliverable %>
 <%=l(:field_deliverable_subject)%>: <%= @issue.deliverable.subject %>
 <% end %>
+<% if @user && @user.allowed_to?(:view_time_entries, @issue.project) %>
+<%=l(:label_spent_time)%>: <%= @issue.spent_time %> of <%= @issue.estimated_hours %> <%= l(:field_hours) %>
+<% end %>
 <%- @issue.custom_values.each do |c| -%>
 <%= c.custom_field.name -%>: <%= show_value(c) -%>
 <%- end -%>

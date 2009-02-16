@@ -26,6 +26,7 @@ module CustomEmailMailerPatch
         set_from_using_name(issue.author.name) unless issue.author.nil? || issue.author.name.nil?
         subject "#{issue.project.name} - #{issue.subject} ##{issue.id}"
         body(:issue => issue,
+             :user => User.find_by_mail(recipient),
              :issue_url => url_for(:controller => 'issues', :action => 'show', :id => issue))
       end
     end
