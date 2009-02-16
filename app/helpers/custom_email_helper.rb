@@ -10,6 +10,17 @@ module CustomEmailHelper
     end
   end
 
+  def deliverable_labor_budget(user, issue, html=true)
+    return '' unless Object.const_defined?("Deliverable") && issue.deliverable && user && user.allowed_to?(:manage_budget, issue.project)
+
+    if html
+      return "<li>#{ l(:label_labor_budget_spent) }: #{ number_to_currency(issue.deliverable.labor_budget) }</li>"
+    else
+      return "#{ l(:label_labor_budget_spent) }: #{ number_to_currency(issue.deliverable.labor_budget) }"
+
+    end
+  end
+
   def issue_spent_hours(user, issue, html=true)
     return '' unless user && user.allowed_to?(:view_time_entries, issue.project)
 

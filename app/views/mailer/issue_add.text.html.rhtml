@@ -13,11 +13,7 @@
 <li><%=l(:field_category)%>: <%= @issue.category %></li>
 <li><%=l(:field_fixed_version)%>: <%= @issue.fixed_version %></li>
 <%= deliverable_subject(@issue.deliverable) %>
-<% if Object.const_defined?("Deliverable") && @issue.deliverable && @user && @user.allowed_to?(:manage_budget, @issue.project) %>
-
-<li><%=l(:label_labor_budget_spent)%>: <%= number_to_currency(@issue.deliverable.labor_budget) %></li>
-
-<% end %>
+<%= deliverable_labor_budget(@user, @issue) %>
 <%= issue_spent_hours(@user, @issue) %>
 <% @issue.custom_values.each do |c| %>
   <li><%= c.custom_field.name %>: <%= show_value(c) %></li>
