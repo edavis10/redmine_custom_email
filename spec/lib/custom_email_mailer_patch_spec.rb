@@ -177,7 +177,7 @@ describe Mailer, "#issue_edit" do
     before(:each) do
       User.should_receive(:find_by_mail).with(@author.mail).and_return(@author)
 
-      @journal_for_question = mock_model(Journal, :notes => 'This is a question to answer')
+      @journal_for_question = mock_model(Journal, :notes => 'This is a question to answer', :notes? => true)
       @closed_question = mock_model(Question,
                                     :assigned_to => nil,
                                     :author => @author,

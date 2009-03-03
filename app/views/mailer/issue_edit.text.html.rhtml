@@ -1,14 +1,15 @@
 <% if @journal.question && @user == @journal.question.assigned_to -%>
-<p><%= l(:text_question_asked) -%> for <%= @journal.question.author.name -%></p>
-<% end -%>
+<h1><%= l(:text_question_asked) -%> for <%= @journal.question.author.name -%></h1>
+<% end %>
 
 <% if @closed_question && @user == @closed_question.author %>
 <h1><%= l(:text_question_answered) %></h1>
+<h2><%= l(:text_answer) %></h2>
 <% end  %>
 <%= textilizable(@journal, :notes, :only_path => false) %>
 
 <% if @closed_question && @user == @closed_question.author %>
-<h1><%= l(:text_question) %></h1>
+<h2><%= l(:text_question) %></h2>
 <%= textilizable(@closed_question.journal, :notes, :only_path => false) %>
 <% end %>
 
