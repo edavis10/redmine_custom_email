@@ -1,3 +1,7 @@
+<% if @journal.question && @user == @journal.question.assigned_to -%>
+<p><%= l(:text_question_asked) -%> for <%= @journal.question.author.name -%></p>
+<% end -%>
+
 <%= textilizable(@journal, :notes, :only_path => false) %>
 
 <p>Updated by: <%= @journal.user %></p>

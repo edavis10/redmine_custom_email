@@ -1,3 +1,7 @@
+<% if @journal.question && @user == @journal.question.assigned_to -%>
+<%= l(:text_question_asked) -%> for <%= @journal.question.author.name %>
+<% end -%>
+
 <%= @journal.notes if @journal.notes? %>
 
 Updated by: <%= @journal.user %>

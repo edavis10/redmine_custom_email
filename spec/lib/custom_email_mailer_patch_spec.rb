@@ -135,8 +135,39 @@ describe Mailer, "#issue_edit" do
                           :user => @author,
                           :notes => "A journal update",
                           :notes? => true,
-                          :details => @journal_details)
+                          :details => @journal_details,
+                          :question => nil)
   end
 
   it_should_behave_like 'a custom email'
+
+  describe 'with an asked question' do
+    before(:each) do
+      User.should_receive(:find_by_mail).with(@author.mail).and_return(@author)
+    end
+    
+    describe 'to the author' do
+      it 'should have "Question Asked" in the body' do
+        @question = mock_model(Question,
+                               :assigned_to => @author,
+                               :author => @author,
+                               :issue => @issue)
+        @journal.stub!(:question).and_return(@question)
+
+        create_mail.body.should match(/Question asked/i)
+      end
+    end
+
+    describe 'to someone else' do
+      it 'should not "Question Asked" in the body' do
+        @question = mock_model(Question,
+                               :assigned_to => nil,
+                               :author => @author,
+                               :issue => @issue)
+        @journal.stub!(:question).and_return(@question)
+
+        create_mail.body.should_not match(/Question asked/i)
+      end
+    end
+  end
 end
