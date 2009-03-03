@@ -4,6 +4,7 @@ require 'custom_email_issue_observer_patch'
 require 'custom_email_journal_observer_patch'
 
 require 'custom_email_mailer_patch'
+require 'custom_email_question_mailer_patch'
 
 Redmine::Plugin.register :redmine_custom_email do
   name 'Custom Email plugin'
