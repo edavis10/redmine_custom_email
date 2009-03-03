@@ -2,7 +2,15 @@
 <p><%= l(:text_question_asked) -%> for <%= @journal.question.author.name -%></p>
 <% end -%>
 
+<% if @closed_question && @user == @closed_question.author %>
+<h1><%= l(:text_question_answered) %></h1>
+<% end  %>
 <%= textilizable(@journal, :notes, :only_path => false) %>
+
+<% if @closed_question && @user == @closed_question.author %>
+<h1><%= l(:text_question) %></h1>
+<%= textilizable(@closed_question.journal, :notes, :only_path => false) %>
+<% end %>
 
 <p>Updated by: <%= @journal.user %></p>
 

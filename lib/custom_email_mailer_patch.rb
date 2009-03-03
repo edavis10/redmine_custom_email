@@ -50,8 +50,13 @@ module CustomEmailMailerPatch
         set_from_using_name(journal.user.name) unless journal.user.nil? || journal.user.name.nil?
         subject "#{issue.project.name} - #{issue.subject} ##{issue.id}"
 
+        # Gets the last opened question on the issue for use in the "Question Answered" email
+        closed_question = journal.issue.questions.find(:last,
+                                                       :conditions => {:assigned_to_id => journal.user.id, :opened => true}) if journal.user
+
         body(:issue => issue,
              :journal => journal,
+             :closed_question => closed_question,
              :user => User.find_by_mail(recipient),
              :issue_url => url_for(:controller => 'issues', :action => 'show', :id => issue))
       end

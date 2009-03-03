@@ -114,6 +114,7 @@ describe Mailer, "#issue_add" do
   end
 
   it_should_behave_like 'a custom email'
+
 end
 
 describe Mailer, "#issue_edit" do
@@ -132,6 +133,7 @@ describe Mailer, "#issue_edit" do
     @journal_details = mock_model(JournalDetail, :each => [])
     @journal = mock_model(Journal,
                           :journalized => @issue,
+                          :issue => @issue,
                           :user => @author,
                           :notes => "A journal update",
                           :notes? => true,
@@ -167,6 +169,49 @@ describe Mailer, "#issue_edit" do
         @journal.stub!(:question).and_return(@question)
 
         create_mail.body.should_not match(/Question asked/i)
+      end
+    end
+  end
+
+  describe 'with an answered question' do
+    before(:each) do
+      User.should_receive(:find_by_mail).with(@author.mail).and_return(@author)
+
+      @journal_for_question = mock_model(Journal, :notes => 'This is a question to answer')
+      @closed_question = mock_model(Question,
+                                    :assigned_to => nil,
+                                    :author => @author,
+                                    :journal => @journal_for_question,
+                                    :issue => @issue)
+
+      @issue.stub!(:questions).and_return(Question)
+      Question.stub!(:find).with(
+                                 :last,
+                                 :conditions => {:assigned_to_id => @author.id, :opened => true}
+                                 ).and_return(@closed_question)
+   end
+    
+   describe 'to the author' do
+     it 'should have "Question Answered" in the body' do
+        create_mail.body.should match(/Question answered/i)
+      end
+
+      it 'should have the original question content in the body' do
+        create_mail.body.should match(/#{@journal_for_question.notes}/i)
+      end
+   end
+
+    describe 'to someone else' do
+      before(:each) do
+        @closed_question.stub!(:author).and_return(mock_model(User, :name => "Question asker"))
+      end
+      
+      it 'should not "Question Answered" in the body' do
+        create_mail.body.should_not match(/Question answered/i)
+      end
+
+      it 'should not have the original question content in the body' do
+        create_mail.body.should_not match(/#{@journal_for_question.notes}/i)
       end
     end
   end
