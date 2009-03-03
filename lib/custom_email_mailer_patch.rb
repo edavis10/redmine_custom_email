@@ -43,6 +43,10 @@ module CustomEmailMailerPatch
         'Issue-Id' => issue.id,
         'Issue-Author' => issue.author.login
         redmine_headers 'Issue-Assignee' => issue.assigned_to.login if issue.assigned_to
+        # Extra headers for questions
+        redmine_headers 'Question-Asked' => true if journal.question
+        redmine_headers 'Question-Assigned-To' => journal.question.assigned_to if journal.question && journal.question.assigned_to
+
         message_id journal
         references issue
         @author = journal.user
