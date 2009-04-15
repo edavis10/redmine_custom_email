@@ -1,5 +1,5 @@
 <% if @journal.question && @user == @journal.question.assigned_to -%>
-<%= l(:text_question_asked) -%> for <%= @journal.question.author.name %>
+<%= l(:text_question_for) -%> <%= @journal.question.assigned_to.name %>
 <% end -%>
 
 <% if @closed_question && @user == @closed_question.author %>
