@@ -30,6 +30,10 @@ module CustomEmailMailerPatch
         body(:issue => issue,
              :user => User.find_by_mail(recipient),
              :issue_url => url_for(:controller => 'issues', :action => 'show', :id => issue))
+        content_type "multipart/alternative"
+
+        part :content_type => "text/plain", :body => render_message("mailer/issue_add.text.plain.rhtml", body)
+        part :content_type => "text/html", :body => render_message("mailer/issue_add.text.html.rhtml", body)
       end
     end
 
@@ -63,6 +67,11 @@ module CustomEmailMailerPatch
              :closed_question => closed_question,
              :user => User.find_by_mail(recipient),
              :issue_url => url_for(:controller => 'issues', :action => 'show', :id => issue))
+
+        content_type "multipart/alternative"
+
+        part :content_type => "text/plain", :body => render_message("mailer/issue_edit.text.plain.rhtml", body)
+        part :content_type => "text/html", :body => render_message("mailer/issue_edit.text.html.rhtml", body)
       end
     end
   end    
