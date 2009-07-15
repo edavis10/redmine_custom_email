@@ -68,10 +68,13 @@ module CustomEmailMailerPatch
              :user => User.find_by_mail(recipient),
              :issue_url => url_for(:controller => 'issues', :action => 'show', :id => issue))
 
-        content_type "multipart/alternative"
+        # http://guides.rails.info/action_mailer_basics.html#sending-emails-with-attachments
+        part "multipart/alternative" do |pt|
+          pt.part :content_type => "text/plain", :body => render_message("mailer/issue_edit.text.plain.rhtml", body)
+          pt.part :content_type => "text/html", :body => render_message("mailer/issue_edit.text.html.rhtml", body)
+        end
 
-        part :content_type => "text/plain", :body => render_message("mailer/issue_edit.text.plain.rhtml", body)
-        part :content_type => "text/html", :body => render_message("mailer/issue_edit.text.html.rhtml", body)
+        attach_thumbnails_from_journal(journal)
       end
     end
   end    
