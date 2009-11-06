@@ -17,7 +17,7 @@
 
 <ul>
 <% for detail in @journal.details %>
-    <li><%= show_detail(detail, true) %></li>
+    <li><%= show_detail(detail, false, :show_link_only => true) %></li>
 <% end %>
 </ul>
 
