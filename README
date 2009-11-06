@@ -1,5 +1,5 @@
-== Empty plugin
+== Custom Email
 
-This is an empty plugin based on the sample plugin for Redmine.  Use it
-to help create your own custom plugin
+This is a collection of custom email hacks for Redmine.  Don't use it in production yet, but feel free to borrow any code you need.
+
 
