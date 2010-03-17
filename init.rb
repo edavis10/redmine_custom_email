@@ -1,10 +1,22 @@
 require 'redmine'
 
-require 'custom_email_issue_observer_patch'
-require 'custom_email_journal_observer_patch'
+# Patches to the Redmine core.
+require 'dispatcher'
 
-require 'custom_email_mailer_patch'
-require 'custom_email_question_mailer_patch'
+Dispatcher.to_prepare :redmine_custom_email do
+  require_dependency 'issue_observer'
+  IssueObserver.instance.extend(CustomEmailIssueObserverPatch)
+
+  require_dependency 'journal_observer'
+  JournalObserver.instance.extend(CustomEmailJournalObserverPatch)
+
+  require_dependency 'mailer'
+  Mailer.send(:include, CustomEmailMailerPatch)
+
+  require_dependency 'question_mailer'
+  require 'custom_email_question_mailer_patch' # TODO: Rename
+  QuestionMailer.send(:include, CustomEmail::Patch::QuestionMailer)
+end
 
 Redmine::Plugin.register :redmine_custom_email do
   name 'Custom Email plugin'

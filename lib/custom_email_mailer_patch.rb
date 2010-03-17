@@ -1,5 +1,3 @@
-require_dependency 'mailer'
-
 module CustomEmailMailerPatch
   def self.included(base) # :nodoc:
     base.send(:include, InstanceMethods)
@@ -80,4 +78,3 @@ module CustomEmailMailerPatch
   end    
 end
 
-Mailer.send(:include, CustomEmailMailerPatch)

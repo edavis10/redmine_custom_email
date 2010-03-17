@@ -1,5 +1,3 @@
-require_dependency 'issue_observer'
-
 module CustomEmailIssueObserverPatch
   def after_create(issue)
     if self.send_notification && Setting.notified_events.include?('issue_added')
@@ -12,4 +10,3 @@ module CustomEmailIssueObserverPatch
   end
 end
 
-IssueObserver.instance.extend(CustomEmailIssueObserverPatch)

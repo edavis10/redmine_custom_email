@@ -1,6 +1,4 @@
 # Wrap the QuestionMailer actions so they do not send emails
-require_dependency 'question_mailer'
-
 module CustomEmail
   module Patch
     module QuestionMailer
@@ -19,4 +17,3 @@ module CustomEmail
   end
 end
 
-QuestionMailer.send(:include, CustomEmail::Patch::QuestionMailer)

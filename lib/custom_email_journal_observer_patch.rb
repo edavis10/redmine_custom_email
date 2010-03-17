@@ -1,5 +1,3 @@
-require_dependency 'journal_observer'
-
 module CustomEmailJournalObserverPatch
   def after_create(journal)
     if self.send_notification && Setting.notified_events.include?('issue_updated')
@@ -29,4 +27,3 @@ module CustomEmailJournalObserverPatch
   end
 end
 
-JournalObserver.instance.extend(CustomEmailJournalObserverPatch)
