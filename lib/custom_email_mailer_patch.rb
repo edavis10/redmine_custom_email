@@ -63,7 +63,7 @@ module CustomEmailMailerPatch
              :user => User.find_by_mail(recipient),
              :issue_url => url_for(:controller => 'issues', :action => 'show', :id => issue))
 
-        render_multipart('issue_add', body)
+        render_multipart('issue_edit', body)
         attach_thumbnails_from_journal(journal)
       end
     end
