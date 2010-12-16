@@ -7,6 +7,19 @@ module CustomEmailMailerPatch
       alias_method_chain :issue_add, :recipient
       alias_method_chain :issue_edit, :recipient
 
+      # Take over render_multipart
+      def render_multipart(method_name, body)
+        if Setting.plain_text_mail?
+          content_type "text/plain"
+          body render(:file => "#{method_name}.text.plain.rhtml", :body => body, :layout => 'mailer.text.plain.erb')
+        else
+          part :content_type => "multipart/alternative" do |a|
+            a.part :content_type => "text/plain", :body => render(:file => "#{method_name}.text.plain.rhtml", :body => body, :layout => 'mailer.text.plain.erb')
+            a.part :content_type => "text/html", :body => render_message("#{method_name}.text.html.rhtml", body)
+          end
+        end
+      end
+
       helper :custom_email
     end
   end
@@ -28,6 +41,7 @@ module CustomEmailMailerPatch
         body(:issue => issue,
              :user => User.find_by_mail(recipient),
              :issue_url => url_for(:controller => 'issues', :action => 'show', :id => issue))
+        content_type "multipart/mixed"
         render_multipart('issue_add', body)
       end
     end
@@ -63,6 +77,8 @@ module CustomEmailMailerPatch
              :user => User.find_by_mail(recipient),
              :issue_url => url_for(:controller => 'issues', :action => 'show', :id => issue))
 
+        content_type "multipart/mixed"
+        
         render_multipart('issue_edit', body)
         attach_thumbnails_from_journal(journal)
       end
