@@ -58,7 +58,7 @@ module CustomEmailMailerPatch
         redmine_headers 'Issue-Assignee' => issue.assigned_to.login if issue.assigned_to
         # Extra headers for questions
         redmine_headers 'Question-Asked' => true if journal.question
-        redmine_headers 'Question-Assigned-To' => journal.question.assigned_to if journal.question && journal.question.assigned_to
+        redmine_headers 'Question-Assigned-To' => journal.question.assigned_to.login if journal.question && journal.question.assigned_to.present?
 
         message_id journal
         references issue
@@ -70,6 +70,9 @@ module CustomEmailMailerPatch
         # Gets the last opened question on the issue for use in the "Question Answered" email
         closed_question = journal.issue.questions.find(:last,
                                                        :conditions => {:assigned_to_id => journal.user.id, :opened => true}) if journal.user
+        if closed_question
+          redmine_headers 'Question-Answer' => "#{closed_question.issue.id}-#{journal.id}"
+        end
 
         body(:issue => issue,
              :journal => journal,
