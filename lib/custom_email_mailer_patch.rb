@@ -83,7 +83,6 @@ module CustomEmailMailerPatch
         content_type "multipart/mixed"
         
         render_multipart('issue_edit', body)
-        attach_thumbnails_from_journal(journal)
       end
     end
   end    
