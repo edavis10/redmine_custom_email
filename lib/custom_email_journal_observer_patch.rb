@@ -1,9 +1,11 @@
 module CustomEmailJournalObserverPatch
-  def after_create(journal)
-    if self.send_notification && Setting.notified_events.include?('issue_updated')
-      # Recipient and watchers should be emailed
-      issue = journal.journalized
-      recipients = (issue.recipients + issue.watcher_recipients)
+  def after_create_issue_journal(journal)
+    if Setting.notified_events.include?('issue_updated') ||
+        (Setting.notified_events.include?('issue_note_added') && journal.notes.present?) ||
+        (Setting.notified_events.include?('issue_status_updated') && journal.new_status.present?) ||
+        (Setting.notified_events.include?('issue_priority_updated') && journal.new_value_for('priority_id').present?)
+      issue = journal.issue
+      recipients = issue.recipients + issue.watcher_recipients
 
       # Add in the question recipient
       if journal.question && journal.question.assigned_to && journal.question.assigned_to.mail
@@ -23,6 +25,7 @@ module CustomEmailJournalObserverPatch
         Mailer.deliver_issue_edit(journal, recipient)
       end
     end
+
     clear_notification
   end
 end
