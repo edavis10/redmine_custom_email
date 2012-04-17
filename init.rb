@@ -4,9 +4,6 @@ require 'redmine'
 require 'dispatcher'
 
 Dispatcher.to_prepare :redmine_custom_email do
-  require_dependency 'issue_observer'
-  IssueObserver.instance.extend(CustomEmailIssueObserverPatch)
-
   require_dependency 'journal_observer'
   JournalObserver.instance.extend(CustomEmailJournalObserverPatch)
 
